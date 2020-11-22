@@ -20,9 +20,9 @@ The Employee Tracker is a Content Management System that uses Node, Inquirer, an
 
 ## Technology Concepts
 
-*Node.js
-*Inquirer.js
-*MySQL
+* Node.js
+* Inquirer.js
+* MySQL
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/#) License
