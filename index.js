@@ -16,11 +16,13 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
+    console.log("Connected");
   if (err) throw err;
   runSearch();
 });
 
 function runSearch() {
+    console.log('-----Employee Database-----');
     inquirer
       .prompt({
         name: "action",
@@ -70,22 +72,16 @@ function runSearch() {
   }
 
   function employeesAll() {
-
-    inquirer
-      .prompt({
-        name: "artist",
-        type: "input",
-        message: "What artist would you like to search for?"
-      })
-      .then(function(answer) {
-        var query = "SELECT position, song, year FROM top5000 WHERE ?";
-        connection.query(query, { artist: answer.artist }, function(err, res) {
-          for (var i = 0; i < res.length; i++) {
-            console.log("Position: " + res[i].position + " || Song: " + res[i].song + " || Year: " + res[i].year);
-          }
-          console.table(data);
+        const query = "SELECT * FROM employee "
+        query += "JOIN roles ON employee.role_id = roles.Id "
+        query += "JOIN department ON roles.department_id = department.Id; ";
+        console.log(query);
+        connection.query(query, function(err, res) {
+            console.table(res);
           runSearch();
         });
-      });
   }
   
+
+    //   .then(function(answer) {
+    // var query = "SELECT position, song, year FROM top5000 WHERE ?";
