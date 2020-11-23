@@ -1,7 +1,8 @@
-var mysql = require("mysql");
-var inquirer = require("inquirer");
+const mysql = require("mysql");
+const inquirer = require("inquirer");
+const figlet = require("figlet");
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
 
   // Your port; if not 3306
@@ -20,9 +21,19 @@ connection.connect(function(err) {
   if (err) throw err;
   runSearch();
 });
+console.log("-------------------------------------------------------------------------------------------");
+figlet("Employee Manager", function(err, data) {
+    if (err) {
+        console.log("Issue");
+        console.dir(err);
+        return;
+    }
+    console.log(data);
+    console.log("-------------------------------------------------------------------------------------------");
+});
+
 
 function runSearch() {
-    console.log('-----Employee Database-----');
     inquirer
       .prompt({
         name: "action",
@@ -30,8 +41,8 @@ function runSearch() {
         message: "What would you like to do?",
         choices: [
           "View all employees",
-          "View all employees by department",
-          "View all employees by role",
+          "View employees by department",
+          "View employees by role",
           "Add department",
           "Add role",
           "Add employee",
@@ -44,11 +55,11 @@ function runSearch() {
             employeesAll();
           break;
   
-        case "View all employees by department":
+        case "View employees by department":
             employeesDept();
           break;
   
-        case "View all employees by role":
+        case "View employees by role":
             employeesRole();
           break;
   
@@ -72,16 +83,67 @@ function runSearch() {
   }
 
   function employeesAll() {
-        const query = "SELECT * FROM employee "
-        query += "JOIN roles ON employee.role_id = roles.Id "
+        let query = "SELECT * FROM employee "
+        query += "JOIN roles ON employee.title_id = roles.Id "
         query += "JOIN department ON roles.department_id = department.Id; ";
-        console.log(query);
+        //console.log(query);
         connection.query(query, function(err, res) {
             console.table(res);
           runSearch();
         });
   }
-  
 
+  function employeesDept() {
+    inquirer
+      .prompt({
+        name: "action",
+        type: "rawlist",
+        message: "Choose Department",
+        choices: [
+          "Sales",
+          "Engineering",
+          "Accounting",
+          "Legal"
+        ]
+      })
+      .then(function(answer) {
+        switch (answer.action) {
+        case "Sales":
+            salesDept();
+          break;
+  
+        case "Engineering":
+            engineeringDept();
+          break;
+  
+        case "Accounting":
+            accountingDept();
+          break;
+  
+        case "Legal":
+            legalDept();
+          break;
+        }
+      });
+  }
+    function salesDept() {
+    // SELECT * FROM employee
+    // JOIN roles ON employee.title_id = roles.Id 
+    // JOIN department ON roles.department_id = department.Id
+    // WHERE department.department_name = "sales";
+        let query = "SELECT * FROM employee "
+        query += "JOIN roles ON employee.title_id = roles.Id "
+        query += "JOIN department ON roles.department_id = department.Id "
+        query += "WHERE department.department_name = Sales";
+        console.log(query);
+        connection.query(query, function(err, res) {
+            console.table(res);
+        runSearch();
+        });
+    }
+  
+// SELECT * FROM employee
+// JOIN roles ON employee.title_id = roles.Id 
+// JOIN department ON roles.department_id = department.Id;
     //   .then(function(answer) {
     // var query = "SELECT position, song, year FROM top5000 WHERE ?";
