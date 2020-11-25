@@ -46,7 +46,8 @@ function runSearch() {
           "Add department",
           "Add role",
           "Add employee",
-          "Update employee role"
+          "Update employee role",
+          "Quit"
         ]
       })
       .then(function(answer) {
@@ -77,6 +78,9 @@ function runSearch() {
   
         case "Update employee role":
             employeeRole();
+          break;
+        case "Quit":
+            connection.end();
           break;
         }
       });
