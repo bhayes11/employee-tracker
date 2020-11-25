@@ -18,6 +18,10 @@ The Employee Tracker is a Content Management System that uses Node, Inquirer, an
 
 ![screenshot](./assets/image1.png)
 
+![screenshot](./assets/image2.png)
+
+![screenshot](./assets/image3.png)
+
 ## Technology Concepts
 
 * Node.js

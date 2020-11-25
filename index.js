@@ -21,6 +21,8 @@ connection.connect(function(err) {
   if (err) throw err;
   runSearch();
 });
+
+//styled text for initial command
 console.log("-------------------------------------------------------------------------------------------");
 figlet("Employee Manager", function(err, data) {
     if (err) {
@@ -32,7 +34,7 @@ figlet("Employee Manager", function(err, data) {
     console.log("-------------------------------------------------------------------------------------------");
 });
 
-
+//initial function
 function runSearch() {
     inquirer
       .prompt({
@@ -85,7 +87,7 @@ function runSearch() {
         }
       });
   }
-
+//view all employees
   function employeesAll() {
         let query = "SELECT * FROM employee "
         query += "JOIN roles ON employee.title_id = roles.Id "
@@ -96,7 +98,7 @@ function runSearch() {
           runSearch();
         });
   }
-
+//main view function dept
   function employeesDept() {
     inquirer
       .prompt({
@@ -130,6 +132,7 @@ function runSearch() {
         }
       });
   }
+  //view sales dept
     function salesDept() {
         let query = "SELECT * FROM employee "
         query += "JOIN roles ON employee.title_id = roles.Id "
@@ -141,7 +144,7 @@ function runSearch() {
         runSearch();
         });
     }
-  
+//view engineering dept  
     function engineeringDept() {
       let query = "SELECT * FROM employee "
       query += "JOIN roles ON employee.title_id = roles.Id "
@@ -153,7 +156,7 @@ function runSearch() {
       runSearch();
       });
     }
-
+//view accounting dept
   function accountingDept() {
     let query = "SELECT * FROM employee "
     query += "JOIN roles ON employee.title_id = roles.Id "
@@ -165,7 +168,7 @@ function runSearch() {
     runSearch();
     });
   }
-
+//view legal dept
   function legalDept() {
     let query = "SELECT * FROM employee "
     query += "JOIN roles ON employee.title_id = roles.Id "
@@ -177,7 +180,7 @@ function runSearch() {
     runSearch();
     });
   }
-
+//view roles
   function employeesRole() {
     let query = "SELECT * FROM employee "
     query += "JOIN roles ON employee.title_id = roles.Id ";
@@ -187,16 +190,24 @@ function runSearch() {
       runSearch();
     });
   }
-  
-  // function employeesDept() {
-  //   let query = "SELECT * FROM employee "
-  //   query += "JOIN roles ON employee.title_id = roles.Id ";
-  //   //console.log(query);
-  //   connection.query(query, function(err, res) {
-  //       console.table(res);
-  //     runSearch();
-  //   });
-  // }
+//add department
+  function departmentAdd() {
+      inquirer
+        .prompt([ 
+          {
+            name: "department_name",
+            type: "input",
+            default: "HR",
+            message: "What department would you like to add?",
+          }
+        ]).then(function(answer) {
+              connection.query(`INSERT INTO department (name) VALUES ("${answer.department_name}")`, function (err, results) {
+                if (err) throw err;
+                console.log("Department successfully added." + answer.department_name);
+                runSearch();
+              });
+            });
+  };
   
 // SELECT * FROM employee
 // JOIN roles ON employee.title_id = roles.Id 
