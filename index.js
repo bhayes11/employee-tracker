@@ -84,7 +84,7 @@ function runSearch() {
 
   function employeesAll() {
         let query = "SELECT * FROM employee "
-        query += "JOIN roles ON employee.title_id = roles.Id ";
+        query += "JOIN roles ON employee.title_id = roles.Id "
         query += "JOIN department ON roles.department_id = department.Id; ";
         //console.log(query);
         connection.query(query, function(err, res) {
@@ -131,7 +131,7 @@ function runSearch() {
         query += "JOIN roles ON employee.title_id = roles.Id "
         query += "JOIN department ON roles.department_id = department.Id "
         query += "WHERE department.department_name = 'Sales' ";
-        console.log(query);
+        //console.log(query);
         connection.query(query, function(err, res) {
             console.table(res);
         runSearch();
@@ -143,7 +143,7 @@ function runSearch() {
       query += "JOIN roles ON employee.title_id = roles.Id "
       query += "JOIN department ON roles.department_id = department.Id "
       query += "WHERE department.department_name = 'Engineering' ";
-      console.log(query);
+      //console.log(query);
       connection.query(query, function(err, res) {
           console.table(res);
       runSearch();
@@ -155,7 +155,7 @@ function runSearch() {
     query += "JOIN roles ON employee.title_id = roles.Id "
     query += "JOIN department ON roles.department_id = department.Id "
     query += "WHERE department.department_name = 'Accounting' ";
-    console.log(query);
+    //console.log(query);
     connection.query(query, function(err, res) {
         console.table(res);
     runSearch();
@@ -167,7 +167,7 @@ function runSearch() {
     query += "JOIN roles ON employee.title_id = roles.Id "
     query += "JOIN department ON roles.department_id = department.Id "
     query += "WHERE department.department_name = 'Legal' ";
-    console.log(query);
+    //console.log(query);
     connection.query(query, function(err, res) {
         console.table(res);
     runSearch();
