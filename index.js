@@ -174,16 +174,25 @@ function runSearch() {
     });
   }
 
-  function employeesAll() {
+  function employeesRole() {
     let query = "SELECT * FROM employee "
     query += "JOIN roles ON employee.title_id = roles.Id ";
-    query += "JOIN department ON roles.department_id = department.Id; ";
     //console.log(query);
     connection.query(query, function(err, res) {
         console.table(res);
       runSearch();
     });
   }
+  
+  // function employeesDept() {
+  //   let query = "SELECT * FROM employee "
+  //   query += "JOIN roles ON employee.title_id = roles.Id ";
+  //   //console.log(query);
+  //   connection.query(query, function(err, res) {
+  //       console.table(res);
+  //     runSearch();
+  //   });
+  // }
   
 // SELECT * FROM employee
 // JOIN roles ON employee.title_id = roles.Id 

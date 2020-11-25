@@ -41,13 +41,17 @@ SELECT * FROM roles;
 SELECT * FROM department;
 
 
-SELECT first_name last_name FROM employee
+SELECT first_name, last_name FROM employee
 JOIN roles ON employee.title_id = roles.Id 
 JOIN department ON roles.department_id = department.Id;
 
 SELECT * FROM employee
 JOIN roles ON employee.title_id = roles.Id 
 JOIN department ON roles.department_id = department.Id;
+
+SELECT e.id, e.first_name 'first name', e.last_name 'last name', r.title, r.salary,d.department_name department FROM employee e
+JOIN roles r ON r.id = e.title_id
+JOIN department d ON d.id = r.department_id;
 
 SELECT * FROM employee
 JOIN roles ON employee.title_id = roles.Id 
