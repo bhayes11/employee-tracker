@@ -201,7 +201,7 @@ function runSearch() {
             message: "What department would you like to add?",
           }
         ]).then(function(answer) {
-              connection.query(`INSERT INTO department (name) VALUES ("${answer.department_name}")`, function (err, results) {
+              connection.query(`INSERT INTO department (answer) VALUES ("${answer.department_name}")`, function (err, results) {
                 if (err) throw err;
                 console.log("Department successfully added." + answer.department_name);
                 runSearch();
