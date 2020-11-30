@@ -16,199 +16,157 @@ const connection = mysql.createConnection({
   database: "company_name_db"
 });
 
-connection.connect(function(err) {
-    console.log("Connected");
+connection.connect(function (err) {
+  console.log("Connected");
   if (err) throw err;
   runSearch();
 });
 
 //styled text for initial command
 console.log("-------------------------------------------------------------------------------------------");
-figlet("Employee Manager", function(err, data) {
-    if (err) {
-        console.log("Issue");
-        console.dir(err);
-        return;
-    }
-    console.log(data);
-    console.log("-------------------------------------------------------------------------------------------");
+figlet("Employee Manager", function (err, data) {
+  if (err) {
+    console.log("Issue");
+    console.dir(err);
+    return;
+  }
+  console.log(data);
+  console.log("-------------------------------------------------------------------------------------------");
 });
 
 //initial function
 function runSearch() {
-    inquirer
-      .prompt({
-        name: "action",
-        type: "rawlist",
-        message: "What would you like to do?",
-        choices: [
-          "View all employees",
-          "View employees by department",
-          "View employees by role",
-          "Add department",
-          "Add role",
-          "Add employee",
-          "Update employee role",
-          "Quit"
-        ]
-      })
-      .then(function(answer) {
-        switch (answer.action) {
+  inquirer
+    .prompt({
+      name: "action",
+      type: "rawlist",
+      message: "What would you like to do?",
+      choices: [
+        "View all employees",
+        "View employees by department",
+        "View employees by role",
+        "Add department",
+        "Add role",
+        "Add employee",
+        "Update employee role",
+        "Quit"
+      ]
+    })
+    .then(function (answer) {
+      switch (answer.action) {
         case "View all employees":
-            employeesAll();
+          employeesAll();
           break;
-  
+
         case "View employees by department":
-            employeesDept();
+          employeesDept();
           break;
-  
+
         case "View employees by role":
-            employeesRole();
+          employeesRole();
           break;
-  
+
         case "Add department":
-            departmentAdd();
+          departmentAdd();
           break;
-        
+
         case "Add role":
-            roleAdd();
-        break;
-        
+          roleAdd();
+          break;
+
         case "Add employee":
-            employeeAdd();
-        break;
-  
+          employeeAdd();
+          break;
+
         case "Update employee role":
-            employeeRole();
+          employeeRole();
           break;
         case "Quit":
-            connection.end();
+          connection.end();
           break;
-        }
-      });
-  }
+      }
+    });
+}
 //view all employees
-  function employeesAll() {
-        let query = "SELECT * FROM employee "
-        query += "JOIN roles ON employee.title_id = roles.Id "
-        query += "JOIN department ON roles.department_id = department.Id; ";
-        //console.log(query);
-        connection.query(query, function(err, res) {
-            console.table(res);
-          runSearch();
-        });
-  }
+function employeesAll() {
+  let query = "SELECT * FROM employee "
+  query += "JOIN roles ON employee.title_id = roles.Id "
+  query += "JOIN department ON roles.department_id = department.Id; ";
+  //console.log(query);
+  connection.query(query, function (err, res) {
+    console.table(res);
+    runSearch();
+  });
+}
 //main view function dept
-  function employeesDept() {
+function employeesDept() {
+  let query = "SELECT department_name FROM department"
+  //console.log(query);
+  connection.query(query, function (err, res) {
+    console.log(res);
+    let departmentList = [];
+    for (i = 0; i < res.length; i ++){
+      departmentList.push(res[i].department_name); 
+    }
+    console.log(departmentList);
     inquirer
       .prompt({
         name: "action",
         type: "rawlist",
         message: "Choose Department",
-        choices: [
-          "Sales",
-          "Engineering",
-          "Accounting",
-          "Legal"
-        ]
+        choices:
+          departmentList
       })
-      .then(function(answer) {
-        switch (answer.action) {
-        case "Sales":
-            salesDept();
-          break;
-  
-        case "Engineering":
-            engineeringDept();
-          break;
-  
-        case "Accounting":
-            accountingDept();
-          break;
-  
-        case "Legal":
-            legalDept();
-          break;
-        }
+      .then(function (answer) {
+        console.log(answer.action);
+        displayEmployeesDept(answer.action)
       });
-  }
-  //view sales dept
-    function salesDept() {
-        let query = "SELECT * FROM employee "
-        query += "JOIN roles ON employee.title_id = roles.Id "
-        query += "JOIN department ON roles.department_id = department.Id "
-        query += "WHERE department.department_name = 'Sales' ";
-        //console.log(query);
-        connection.query(query, function(err, res) {
-            console.table(res);
-        runSearch();
-        });
-    }
-//view engineering dept  
-    function engineeringDept() {
-      let query = "SELECT * FROM employee "
-      query += "JOIN roles ON employee.title_id = roles.Id "
-      query += "JOIN department ON roles.department_id = department.Id "
-      query += "WHERE department.department_name = 'Engineering' ";
-      //console.log(query);
-      connection.query(query, function(err, res) {
-          console.table(res);
-      runSearch();
-      });
-    }
-//view accounting dept
-  function accountingDept() {
-    let query = "SELECT * FROM employee "
-    query += "JOIN roles ON employee.title_id = roles.Id "
-    query += "JOIN department ON roles.department_id = department.Id "
-    query += "WHERE department.department_name = 'Accounting' ";
-    //console.log(query);
-    connection.query(query, function(err, res) {
-        console.table(res);
+  });
+}
+//view sales dept
+function displayEmployeesDept(departmentVar) {
+  console.log(departmentVar);
+  let query = "SELECT * FROM employee "
+  query += "JOIN roles ON employee.title_id = roles.Id "
+  query += "JOIN department ON roles.department_id = department.Id "
+  query += `WHERE department.department_name = "${departmentVar}"`;
+  console.log(query);
+  connection.query(query, function (err, res) {
+    console.table(res);
     runSearch();
-    });
-  }
-//view legal dept
-  function legalDept() {
-    let query = "SELECT * FROM employee "
-    query += "JOIN roles ON employee.title_id = roles.Id "
-    query += "JOIN department ON roles.department_id = department.Id "
-    query += "WHERE department.department_name = 'Legal' ";
-    //console.log(query);
-    connection.query(query, function(err, res) {
-        console.table(res);
-    runSearch();
-    });
-  }
+  });
+}
+
 //view roles
-  function employeesRole() {
-    let query = "SELECT * FROM employee "
-    query += "JOIN roles ON employee.title_id = roles.Id ";
-    //console.log(query);
-    connection.query(query, function(err, res) {
-        console.table(res);
-      runSearch();
-    });
-  }
+function employeesRole() {
+  let query = "SELECT * FROM employee "
+  query += "JOIN roles ON employee.title_id = roles.Id ";
+  //console.log(query);
+  connection.query(query, function (err, res) {
+    console.table(res);
+    runSearch();
+  });
+}
 //add department
-  function departmentAdd() {
-      inquirer
-        .prompt([ 
-          {
-            name: "department_name",
-            type: "input",
-            default: "HR",
-            message: "What department would you like to add?",
-          }
-        ]).then(function(answer) {
-              connection.query(`INSERT INTO department (answer) VALUES ("${answer.department_name}")`, function (err, results) {
-                if (err) throw err;
-                console.log("Department successfully added." + answer.department_name);
-                runSearch();
-              });
-            });
-  };
-  
+function departmentAdd() {
+  inquirer
+    .prompt([
+      {
+        name: "department_name",
+        type: "input",
+        default: "HR",
+        message: "What department would you like to add?",
+      }
+    ]).then(function (answer) {
+      connection.query(`INSERT INTO department (department_name) VALUES ("${answer.department_name}")`, function (err, results) {
+        if (err) throw err;
+        console.log("Department successfully added." + answer.department_name);
+        console.log('INSERT INTO department (department_name) VALUES ("' + answer.department_name + '")');
+        runSearch();
+      });
+    });
+};
+
 // SELECT * FROM employee
 // JOIN roles ON employee.title_id = roles.Id 
 // JOIN department ON roles.department_id = department.Id;
@@ -220,14 +178,14 @@ function runSearch() {
 //       constructor(connection) {
 //         this.connection = connection;
 //       }
-    
+
 //       // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
 //       findAllEmployees() {
 //         return this.connection.query(
 //           "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
 //         );
 //       }
-    
+
 //       // Find all employees except the given employee id
 //       findAllPossibleManagers(employeeId) {
 //         return this.connection.query(
@@ -235,12 +193,12 @@ function runSearch() {
 //           employeeId
 //         );
 //       }
-    
+
 //       // Create a new employee
 //       createEmployee(employee) {
 //         return this.connection.query("INSERT INTO employee SET ?", employee);
 //       }
-    
+
 //       // Remove an employee with the given id
 //       removeEmployee(employeeId) {
 //         return this.connection.query(
@@ -248,56 +206,56 @@ function runSearch() {
 //           employeeId
 //         );
 //       }
-    
+
 //       // Update the given employee's role
 //       updateEmployeeRole(employeeId, roleId) {
 //             //   logic
 //       }
-    
+
 //       // Update the given employee's manager
 //       updateEmployeeManager(employeeId, managerId) {
 //       //  logic
 //       }
-    
+
 //       // Find all roles, join with departments to display the department name
 //       findAllRoles() {
 //           // logic here
 //       }
-    
+
 //       // Create a new role
 //       createRole(role) {
 //       //  logic here
 //       }
-    
+
 //       // Remove a role from the db
 //       removeRole(roleId) {
 //        // logic here
 //       }
-    
+
 //       // Find all departments, join with employees and roles and sum up utilized department budget
 //       findAllDepartments() {
 //       //  logic here
 //       }
-    
+
 //       // Create a new department
 //       createDepartment(department) {
 //       //  logic here
 //       }
-    
+
 //       // Remove a department
 //       removeDepartment(departmentId) {
 //       //  logic here
 //       }
-    
+
 //       // Find all employees in a given department, join with roles to display role titles
 //       findAllEmployeesByDepartment(departmentId) {
 //       //   logic here
 //       }
-    
+
 //       // Find all employees by manager, join with departments and roles to display titles and department names
 //       findAllEmployeesByManager(managerId) {
 //       //   logic here
-       
+
 //       }
 //     }
 
